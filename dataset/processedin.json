@@ -1,0 +1,37 @@
+{
+	"name": "processedin",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "processedin"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"meta": {
+					"type": "object",
+					"properties": {
+						"data_version": {
+							"type": "string"
+						},
+						"created": {
+							"type": "string"
+						},
+						"revision": {
+							"type": "integer"
+						}
+					}
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

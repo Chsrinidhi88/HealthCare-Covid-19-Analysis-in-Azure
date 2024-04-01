@@ -1,0 +1,139 @@
+{
+	"name": "exceptionhandling",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "svar1",
+					"value": "hi"
+				}
+			},
+			{
+				"name": "Set variable2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "svar2",
+					"value": {
+						"value": "@int('1')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable3",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable2",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "svar3",
+					"value": "hello"
+				}
+			},
+			{
+				"name": "Set variable4",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "error",
+					"value": {
+						"value": "@concat(activity('Set variable1')?.Error?.Message,' | ',activity('Set variable2')?.Error?.Message,' | ', activity('Set variable3')?.Error?.Message)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Web email notification",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Set variable4",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-75.eastus.logic.azure.com:443/workflows/aee9a99ab7c341b8915195cc8abd9289/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vKPCYVpABpmzN7wiv1H_ATg-QI9H6V2R-Ec0LDRP6E0",
+					"body": {
+						"pipeline": "@pipeline().Pipeline",
+						"runid": "@pipeline().RunId",
+						"error message": "@variables('error')"
+					}
+				}
+			}
+		],
+		"variables": {
+			"svar1": {
+				"type": "String"
+			},
+			"svar2": {
+				"type": "String"
+			},
+			"svar3": {
+				"type": "String"
+			},
+			"error": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-16T01:33:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
