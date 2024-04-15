@@ -1,22 +1,28 @@
 {
-	"name": "AzureSqlTable1",
+	"name": "migration_sqlserveronprem",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabase1",
+			"referenceName": "SqlServer1",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"tab_name": {
+			"table_name": {
+				"type": "string"
+			},
+			"schema_name": {
 				"type": "string"
 			}
 		},
 		"annotations": [],
-		"type": "AzureSqlTable",
+		"type": "SqlServerTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "dbo",
+			"schema": {
+				"value": "@dataset().schema_name",
+				"type": "Expression"
+			},
 			"table": {
-				"value": "@dataset().tab_name",
+				"value": "@dataset().table_name",
 				"type": "Expression"
 			}
 		}

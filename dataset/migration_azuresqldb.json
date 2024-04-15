@@ -1,12 +1,15 @@
 {
-	"name": "AzureSqlTable1",
+	"name": "migration_azuresqldb",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabase1",
+			"referenceName": "AzureSqlDatabase_migration",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"tab_name": {
+			"table_name": {
+				"type": "string"
+			},
+			"schema_name": {
 				"type": "string"
 			}
 		},
@@ -14,9 +17,12 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "dbo",
+			"schema": {
+				"value": "@dataset().schema_name",
+				"type": "Expression"
+			},
 			"table": {
-				"value": "@dataset().tab_name",
+				"value": "@dataset().table_name",
 				"type": "Expression"
 			}
 		}
